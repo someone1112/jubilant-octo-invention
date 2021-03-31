@@ -1,0 +1,24 @@
+#!/bin/bash
+
+mkdir -p /tmp/rom # Where to sync source
+cd /tmp/rom
+
+repo init --no-repo-verify --depth=1 -u https://github.com/Evolution-X/manifest -b elle -g default,-device,-mips,-darwin,-notdefault
+
+repo sync --no-clone-bundle --no-tags --force-sync -j30 || repo sync -c --no-clone-bundle --no-tags --optimized-fetch --prune --force-sync -j10
+
+export BUILD_BROKEN_DUP_RULES=true
+export ALLOW_MISSING_DEPENDENCIES=true
+export SKIP_ABI_CHECKS=true
+
+#rm -rf hardware/qcom/display
+#rm -rf hardware/qcom/media
+rm -rf hardware/xiaomi
+#git clone --depth=1 https://github.com/AOSPA/android_hardware_qcom_display -b ruby-855 hardware/qcom/display
+#git clone --depth=1 https://github.com/AOSPA/android_hardware_qcom_media -b ruby-855 hardware/qcom/media
+git clone https://github.com/Agent24015/device_xiaomi_violet device/xiaomi/violet --single-branch --depth=1 -b 11
+#git clone https://github.com/Agent24015/android_device_xiaomi_sm6150-common/ device/xiaomi/sm6150-common --single-branch --depth=1 -b ruby
+git clone https://github.com/xiaomi-sm6150/android_vendor_xiaomi vendor/xiaomi --single-branch --depth=1 -b ruby
+git clone https://github.com/Agent24015/android_kernel_xiaomi_sm6150 --single-branch --depth=1 -b ruby kernel/xiaomi/violet
+git clone https://github.com/LineageOS/android_hardware_xiaomi hardware/xiaomi --depth=1
+
